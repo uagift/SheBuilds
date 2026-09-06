@@ -21,8 +21,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const formCardContainer = document.getElementById('form-card-container');
   const formInteractiveView = document.getElementById('form-interactive-view');
   const successView = document.getElementById('success-view');
+  const postRegistrationView = document.getElementById('post-registration-view');
   const submitBtn = document.getElementById('submit-btn');
+  const continueToHubBtn = document.getElementById('continue-to-hub-btn');
   const resetFormBtn = document.getElementById('reset-form-btn');
+  const resetRegBtn = document.getElementById('reset-reg-btn');
   const announcer = document.getElementById('form-status-announcer');
 
   // Fields
@@ -543,21 +546,23 @@ document.addEventListener('DOMContentLoaded', () => {
       submitBtn.classList.remove('is-loading');
       submitBtn.removeAttribute('disabled');
 
-      // Populate Success State Details if elements exist
-      if (successMemberName && fields.fullname.input) {
-        successMemberName.textContent = fields.fullname.input.value.trim();
-      }
-      if (successMemberEmail && fields.email.input) {
-        successMemberEmail.textContent = fields.email.input.value.trim();
-      }
+      // Save ONLY registration status flag - NEVER store passwords or personal data
+      localStorage.setItem('sheBuildsRegistered', 'true');
 
-      // Transition to Success State
+      // Transition to One-Time Success Confirmation View
       formInteractiveView.hidden = true;
+      postRegistrationView.hidden = true;
       successView.hidden = false;
+
+      // Update header indicator
+      if (signInBtn) {
+        signInBtn.textContent = 'Active Member';
+        signInBtn.setAttribute('aria-label', 'Active member status');
+      }
 
       // Announce and move focus to success view
       if (announcer) {
-        announcer.textContent = 'Registration successful! Welcome to SheBuilds Rwanda.';
+        announcer.textContent = "You're in! Your first step toward learning, building, and growing in technology starts here.";
       }
       successView.setAttribute('tabindex', '-1');
       successView.focus();
@@ -568,13 +573,55 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // --------------------------------------------------------------------------
-  // 8. Reset & Register Another Member
+  // 8. Registration Flow State Management (First visit, Submit, After reload)
   // --------------------------------------------------------------------------
-  resetFormBtn.addEventListener('click', () => {
-    // Reset form inputs
+  function checkRegistrationState() {
+    const isRegistered = localStorage.getItem('sheBuildsRegistered') === 'true';
+
+    if (isRegistered) {
+      // 3. After reload (or registered state):
+      // - Do NOT show the form
+      // - Do NOT show "You're in!" again (one-time confirmation)
+      // - Show the normal post-registration member page/content
+      if (formInteractiveView) formInteractiveView.hidden = true;
+      if (successView) successView.hidden = true;
+      if (postRegistrationView) postRegistrationView.hidden = false;
+
+      if (signInBtn) {
+        signInBtn.textContent = 'Active Member';
+        signInBtn.setAttribute('aria-label', 'Active member of SheBuilds Rwanda');
+      }
+    } else {
+      // 1. First visit (or cleared state):
+      // - Show existing SheBuilds content + registration form
+      // - Keep all fields and validation active
+      if (formInteractiveView) formInteractiveView.hidden = false;
+      if (successView) successView.hidden = true;
+      if (postRegistrationView) postRegistrationView.hidden = true;
+
+      if (signInBtn) {
+        signInBtn.textContent = 'Sign in';
+        signInBtn.setAttribute('aria-label', 'Sign in to your SheBuilds account');
+      }
+    }
+  }
+
+  // Handle "Explore Member Hub →" button in one-time confirmation
+  if (continueToHubBtn) {
+    continueToHubBtn.addEventListener('click', () => {
+      successView.hidden = true;
+      postRegistrationView.hidden = false;
+      postRegistrationView.setAttribute('tabindex', '-1');
+      postRegistrationView.focus();
+    });
+  }
+
+  // Reset helper for development / testing demo
+  function resetRegistrationState() {
+    localStorage.removeItem('sheBuildsRegistered');
     form.reset();
 
-    // Reset touched state and UI styles for all fields
+    // Reset touched states and field validation styles
     Object.keys(fields).forEach(key => {
       const f = fields[key];
       f.touched = false;
@@ -591,13 +638,31 @@ document.addEventListener('DOMContentLoaded', () => {
     ruleUppercase.classList.remove('is-satisfied');
     ruleUppercase.querySelector('.check-icon').textContent = '○';
 
-    // Show form, hide success
-    successView.hidden = true;
-    formInteractiveView.hidden = false;
+    // Refresh view state
+    checkRegistrationState();
 
-    // Focus back to first input
-    fields.fullname.input.focus();
+    if (fields.fullname.input) {
+      fields.fullname.input.focus();
+    }
+  }
+
+  if (resetRegBtn) {
+    resetRegBtn.addEventListener('click', resetRegistrationState);
+  }
+
+  if (resetFormBtn) {
+    resetFormBtn.addEventListener('click', resetRegistrationState);
+  }
+
+  // Listen to cross-window or console storage changes
+  window.addEventListener('storage', (e) => {
+    if (e.key === 'sheBuildsRegistered') {
+      checkRegistrationState();
+    }
   });
+
+  // Initial check on page load
+  checkRegistrationState();
 
   // --------------------------------------------------------------------------
   // 9. Sign In Hint Toast Interaction

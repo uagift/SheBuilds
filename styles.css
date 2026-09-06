@@ -1213,6 +1213,111 @@ label {
   outline-offset: 3px;
 }
 
+.success-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+/* --------------------------------------------------------------------------
+   14b. Post-Registration Member Hub Card (Shown after reload)
+   -------------------------------------------------------------------------- */
+.post-reg-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  animation: fadeInPop 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.post-reg-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: var(--radius-full);
+  background: var(--color-success-bg);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: var(--color-success-light);
+  font-size: 0.775rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.75rem;
+  width: fit-content;
+}
+
+.post-reg-title {
+  font-family: var(--font-display);
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  margin-bottom: 0.45rem;
+}
+
+.post-reg-subtitle {
+  font-size: 0.925rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.member-actions-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.member-action-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: rgba(15, 4, 45, 0.5);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.05rem 1.2rem;
+  transition: all var(--transition-fast);
+}
+
+.member-action-item:hover {
+  border-color: rgba(167, 139, 250, 0.4);
+  background: rgba(26, 16, 55, 0.75);
+  transform: translateY(-1px);
+}
+
+.action-icon {
+  font-size: 1.35rem;
+  line-height: 1.2;
+  flex-shrink: 0;
+}
+
+.action-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.85rem;
+}
+
+.action-info strong {
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.action-info span {
+  color: var(--text-muted);
+  line-height: 1.45;
+}
+
+.post-reg-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
 /* --------------------------------------------------------------------------
    15. Toast Notification for "Sign in"
    -------------------------------------------------------------------------- */
