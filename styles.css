@@ -1,0 +1,1430 @@
+/* ==========================================================================
+   SheBuilds Rwanda — Design System & Stylesheet
+   Codveda Level 1, Task 2: Interactive Form
+   Theme Palette Extracted from Reference:
+     Canvas: #0F042D (Deep Night Purple / Midnight Plum)
+     Accents: #987CD0 (Brand Violet), #A78BFA (Lilac Accent), #7C3AED (Deep Violet)
+     Light Surfaces: #FAF8FD / #FFFFFF (High Contrast Clean Programme Card)
+     Feedback: #10B981 (Success Emerald), #F43F5E (Error Coral), #F59E0B (Warning Amber)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. CSS Custom Properties / Design Tokens
+   -------------------------------------------------------------------------- */
+:root {
+  /* Canvas & Dark Surfaces */
+  --bg-base: #0F042D;
+  --bg-surface-dark: #160D34;
+  --bg-surface-elevated: #1F153B;
+  --bg-surface-glass: rgba(26, 16, 55, 0.78);
+  --bg-input: rgba(15, 4, 45, 0.65);
+  --bg-input-focus: rgba(22, 10, 52, 0.95);
+
+  /* Light Card Surface (Inspired by "The Programme" card in reference) */
+  --bg-light-card: #FAF8FD;
+  --text-dark-primary: #12072B;
+  --text-dark-secondary: #473B63;
+  --text-dark-muted: #6B5E87;
+
+  /* Brand Violet Palette */
+  --brand-violet-dark: #6D28D9;
+  --brand-violet: #7C3AED;
+  --brand-violet-primary: #987CD0;
+  --brand-lilac: #A78BFA;
+  --brand-lilac-light: #C4B5FD;
+  --brand-lilac-soft: rgba(167, 139, 250, 0.12);
+  --brand-glow: rgba(152, 124, 208, 0.28);
+
+  /* Functional Feedback */
+  --color-success: #10B981;
+  --color-success-light: #34D399;
+  --color-success-bg: rgba(16, 185, 129, 0.12);
+  
+  --color-error: #F43F5E;
+  --color-error-light: #FB7185;
+  --color-error-bg: rgba(244, 63, 94, 0.12);
+
+  --color-warning: #F59E0B;
+  --color-warning-light: #FBBF24;
+
+  /* Typography Colors on Dark Canvas */
+  --text-primary: #FFFFFF;
+  --text-secondary: #E2DDF2;
+  --text-muted: #A59DBE;
+  --text-disabled: #6A6082;
+
+  /* Borders & Dividers */
+  --border-subtle: rgba(167, 139, 250, 0.16);
+  --border-card: rgba(167, 139, 250, 0.24);
+  --border-focus: #A78BFA;
+  --border-error: #F43F5E;
+  --border-success: #10B981;
+
+  /* Shadows */
+  --shadow-sm: 0 4px 8px rgba(5, 1, 15, 0.35);
+  --shadow-md: 0 12px 24px -4px rgba(5, 1, 15, 0.5);
+  --shadow-lg: 0 24px 48px -12px rgba(5, 1, 15, 0.7);
+  --shadow-card-light: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
+  --shadow-glow: 0 0 32px rgba(152, 124, 208, 0.35);
+
+  /* Fonts */
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --font-display: 'Space Grotesk', var(--font-sans);
+
+  /* Layout & Sizing */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 26px;
+  --radius-full: 9999px;
+
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-smooth: 350ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --------------------------------------------------------------------------
+   2. Reset & Base Styles
+   -------------------------------------------------------------------------- */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--bg-base);
+  color: var(--text-secondary);
+  line-height: 1.6;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Screen reader only utility */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* --------------------------------------------------------------------------
+   3. Ambient Background & Reference Theme Effects
+   -------------------------------------------------------------------------- */
+.bg-glow {
+  position: fixed;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(120px);
+  z-index: 0;
+  opacity: 0.65;
+}
+
+.bg-glow-1 {
+  top: -10%;
+  left: -5%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(124, 58, 237, 0.32) 0%, rgba(15, 4, 45, 0) 70%);
+}
+
+.bg-glow-2 {
+  bottom: -15%;
+  right: -5%;
+  width: 700px;
+  height: 700px;
+  background: radial-gradient(circle, rgba(152, 124, 208, 0.24) 0%, rgba(15, 4, 45, 0) 70%);
+}
+
+/* Subtle vertical stripes echoing the slide reference background */
+.bg-stripes {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    transparent,
+    transparent 140px,
+    rgba(255, 255, 255, 0.018) 140px,
+    rgba(255, 255, 255, 0.018) 280px
+  );
+  opacity: 0.7;
+}
+
+.app-wrapper {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   4. Header & Navigation
+   -------------------------------------------------------------------------- */
+.site-header {
+  width: 100%;
+  border-bottom: 1px solid var(--border-subtle);
+  background: rgba(15, 4, 45, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.header-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1.1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.brand-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  transition: transform var(--transition-fast);
+}
+
+.brand-logo:hover {
+  transform: translateY(-1px);
+}
+
+.brand-logo:focus-visible {
+  outline: 2px solid var(--brand-lilac);
+  outline-offset: 4px;
+  border-radius: var(--radius-sm);
+}
+
+.logo-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(167, 139, 250, 0.15);
+  border: 1px solid rgba(167, 139, 250, 0.35);
+  box-shadow: 0 0 16px rgba(167, 139, 250, 0.25);
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.brand-tag {
+  font-size: 0.725rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--brand-lilac);
+}
+
+.site-nav {
+  display: flex;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+}
+
+.nav-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+  padding: 0.3rem 0;
+  position: relative;
+}
+
+.nav-link:hover {
+  color: var(--text-primary);
+}
+
+.nav-link:focus-visible {
+  outline: 2px solid var(--brand-lilac);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.header-action {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.signin-hint {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+/* Reference Slide Pill Style (Page 3 / Action Pill) */
+.btn-outline-pill {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1.5px solid rgba(167, 139, 250, 0.4);
+  padding: 0.5rem 1.25rem;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-outline-pill:hover {
+  background: rgba(167, 139, 250, 0.15);
+  border-color: var(--brand-lilac);
+  color: #FFFFFF;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(167, 139, 250, 0.2);
+}
+
+.btn-outline-pill:focus-visible {
+  outline: 2px solid var(--brand-lilac);
+  outline-offset: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   5. Main Content Grid Layout
+   -------------------------------------------------------------------------- */
+.main-container {
+  flex: 1;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 3rem 2rem 4rem;
+}
+
+.layout-grid {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 3.5rem;
+  align-items: start;
+}
+
+/* --------------------------------------------------------------------------
+   6. Left Column: Hero & Opportunity Hub
+   -------------------------------------------------------------------------- */
+.hero-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  padding-right: 1rem;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 1rem;
+  border-radius: var(--radius-full);
+  background: rgba(167, 139, 250, 0.12);
+  border: 1px solid rgba(167, 139, 250, 0.28);
+  color: var(--brand-lilac-light);
+  font-size: 0.825rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  width: fit-content;
+}
+
+.badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--brand-lilac);
+  box-shadow: 0 0 10px var(--brand-lilac);
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 4vw, 3.4rem);
+  font-weight: 800;
+  line-height: 1.15;
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, #FFFFFF 20%, #C4B5FD 70%, #A78BFA 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline;
+}
+
+.hero-lead {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 520px;
+}
+
+/* Motto Strip */
+.motto-strip {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.75rem 1.25rem;
+  background: rgba(31, 21, 59, 0.5);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  width: fit-content;
+}
+
+.motto-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--brand-lilac-light);
+  letter-spacing: 0.02em;
+}
+
+.motto-icon {
+  font-size: 1.1rem;
+}
+
+.motto-divider {
+  color: var(--text-disabled);
+  font-size: 0.75rem;
+}
+
+/* --------------------------------------------------------------------------
+   7. Programme Card (Direct Inspiration from "The Programme" Reference Card)
+   -------------------------------------------------------------------------- */
+.programme-card {
+  background: var(--bg-light-card);
+  color: var(--text-dark-primary);
+  border-radius: var(--radius-lg);
+  padding: 2rem 2.25rem;
+  box-shadow: var(--shadow-card-light), 0 0 0 1px rgba(255, 255, 255, 0.4) inset;
+  position: relative;
+  overflow: hidden;
+  transition: transform var(--transition-normal), box-shadow var(--transition-normal);
+}
+
+.programme-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 24px 44px -8px rgba(0, 0, 0, 0.45);
+}
+
+.programme-card-header {
+  margin-bottom: 1.5rem;
+}
+
+.programme-title {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: var(--text-dark-primary);
+  letter-spacing: -0.02em;
+  margin-bottom: 0.6rem;
+}
+
+/* Violet accent underline matching reference slide */
+.programme-line {
+  width: 54px;
+  height: 3.5px;
+  background: var(--brand-violet-primary);
+  border-radius: 2px;
+}
+
+.programme-features {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  font-size: 0.925rem;
+  line-height: 1.5;
+}
+
+.feature-icon {
+  color: var(--brand-violet-dark);
+  font-size: 1.1rem;
+  line-height: 1.3;
+  flex-shrink: 0;
+}
+
+.feature-item strong {
+  display: block;
+  font-size: 0.975rem;
+  color: var(--text-dark-primary);
+  font-weight: 700;
+}
+
+.feature-item span {
+  color: var(--text-dark-secondary);
+}
+
+/* Social Proof Badge */
+.community-stats {
+  display: flex;
+  align-items: center;
+  gap: 1.15rem;
+  padding: 1.15rem 1.4rem;
+  background: rgba(22, 13, 52, 0.65);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  backdrop-filter: blur(8px);
+}
+
+.stat-avatars {
+  display: flex;
+  align-items: center;
+}
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--bg-surface-elevated);
+  border: 2px solid var(--bg-surface-dark);
+  margin-left: -8px;
+  font-size: 1.1rem;
+}
+
+.avatar:first-child {
+  margin-left: 0;
+}
+
+.stat-text {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-text strong {
+  color: var(--text-primary);
+  font-weight: 700;
+}
+
+.stat-sub {
+  font-size: 0.775rem;
+  color: var(--brand-lilac);
+  font-weight: 500;
+}
+
+/* --------------------------------------------------------------------------
+   8. Right Column: Form Card Container & Glassmorphism
+   -------------------------------------------------------------------------- */
+.form-column {
+  width: 100%;
+}
+
+.form-card {
+  background: var(--bg-surface-glass);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-card);
+  border-radius: var(--radius-xl);
+  padding: 2.5rem 2.5rem 2.25rem;
+  box-shadow: var(--shadow-lg), 0 0 40px rgba(152, 124, 208, 0.1);
+  position: relative;
+  transition: all var(--transition-normal);
+}
+
+.form-header {
+  margin-bottom: 2rem;
+}
+
+.form-title {
+  font-family: var(--font-display);
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+
+.form-subtitle {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+/* --------------------------------------------------------------------------
+   9. Form Controls & Inputs
+   -------------------------------------------------------------------------- */
+#shebuilds-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  position: relative;
+}
+
+.label-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  letter-spacing: 0.01em;
+  cursor: pointer;
+}
+
+.required-mark {
+  color: var(--brand-lilac);
+  margin-left: 2px;
+  font-weight: 700;
+}
+
+.label-hint {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.field-help {
+  font-size: 0.775rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+  line-height: 1.3;
+}
+
+/* Input Wrapper & Icon positioning */
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.input-icon {
+  position: absolute;
+  left: 1rem;
+  color: var(--text-muted);
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition-fast);
+}
+
+.form-control {
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  color: var(--text-primary);
+  background-color: var(--bg-input);
+  border: 1.5px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 2.85rem 0.85rem 2.85rem;
+  outline: none;
+  transition: all var(--transition-normal);
+  line-height: 1.5;
+}
+
+.form-control::placeholder {
+  color: var(--text-disabled);
+  opacity: 1;
+}
+
+/* Field Focus State */
+.form-control:focus {
+  background-color: var(--bg-input-focus);
+  border-color: var(--brand-lilac);
+  box-shadow: 0 0 0 3.5px rgba(167, 139, 250, 0.22);
+}
+
+.form-group:focus-within .input-icon {
+  color: var(--brand-lilac);
+}
+
+/* Status Indicator Icon (Check or Alert) */
+.input-status-indicator {
+  position: absolute;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  font-size: 1rem;
+  font-weight: 700;
+  transition: transform var(--transition-fast), opacity var(--transition-fast);
+  opacity: 0;
+}
+
+/* Valid State */
+.form-group.is-valid .form-control {
+  border-color: var(--border-success);
+  box-shadow: 0 0 0 3.5px rgba(16, 185, 129, 0.16);
+}
+
+.form-group.is-valid .input-status-indicator {
+  opacity: 1;
+  color: var(--color-success-light);
+}
+
+.form-group.is-valid .input-icon {
+  color: var(--color-success-light);
+}
+
+/* Invalid / Error State */
+.form-group.is-invalid .form-control {
+  border-color: var(--border-error);
+  box-shadow: 0 0 0 3.5px rgba(244, 63, 94, 0.2);
+}
+
+.form-group.is-invalid .input-status-indicator {
+  opacity: 1;
+  color: var(--color-error-light);
+}
+
+.form-group.is-invalid .input-icon {
+  color: var(--color-error-light);
+}
+
+/* Password Visibility Toggle Button */
+.toggle-visibility-btn {
+  position: absolute;
+  right: 0.85rem;
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.35rem;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--transition-fast), background var(--transition-fast);
+  z-index: 2;
+}
+
+.toggle-visibility-btn:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.toggle-visibility-btn:focus-visible {
+  outline: 2px solid var(--brand-lilac);
+  outline-offset: 2px;
+}
+
+/* Adjust padding when toggle button is present */
+#password, #confirm-password {
+  padding-right: 3rem;
+}
+
+/* --------------------------------------------------------------------------
+   10. Field Feedback Messages (Icons + Text, not color alone)
+   -------------------------------------------------------------------------- */
+.field-feedback {
+  font-size: 0.825rem;
+  font-weight: 500;
+  min-height: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  opacity: 0;
+  transform: translateY(-3px);
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+
+.field-feedback:not(:empty) {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.field-feedback.error {
+  color: var(--color-error-light);
+}
+
+.field-feedback.success {
+  color: var(--color-success-light);
+}
+
+/* --------------------------------------------------------------------------
+   11. Password Strength Meter
+   -------------------------------------------------------------------------- */
+.password-meter-box {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.meter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.775rem;
+}
+
+.meter-title {
+  color: var(--text-muted);
+}
+
+.meter-badge {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: var(--text-disabled);
+  transition: color var(--transition-fast);
+}
+
+.meter-track {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  height: 6px;
+  width: 100%;
+}
+
+.meter-bar {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-full);
+  height: 100%;
+  transition: background-color var(--transition-normal), transform var(--transition-normal);
+}
+
+/* Dynamic Strength Colors */
+.strength-weak #meter-bar-1 {
+  background-color: var(--color-error);
+}
+.strength-weak #strength-label {
+  color: var(--color-error-light);
+}
+
+.strength-fair #meter-bar-1,
+.strength-fair #meter-bar-2 {
+  background-color: var(--color-warning);
+}
+.strength-fair #strength-label {
+  color: var(--color-warning-light);
+}
+
+.strength-good #meter-bar-1,
+.strength-good #meter-bar-2,
+.strength-good #meter-bar-3 {
+  background-color: var(--brand-lilac);
+}
+.strength-good #strength-label {
+  color: var(--brand-lilac-light);
+}
+
+.strength-strong #meter-bar-1,
+.strength-strong #meter-bar-2,
+.strength-strong #meter-bar-3,
+.strength-strong #meter-bar-4 {
+  background-color: var(--color-success);
+}
+.strength-strong #strength-label {
+  color: var(--color-success-light);
+}
+
+/* --------------------------------------------------------------------------
+   12. Dynamic Password Requirements Checklist
+   -------------------------------------------------------------------------- */
+.password-checklist-box {
+  background: rgba(15, 4, 45, 0.45);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1rem;
+  margin-top: 0.35rem;
+}
+
+.checklist-title {
+  font-size: 0.775rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0.5rem;
+}
+
+.checklist {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.825rem;
+  color: var(--text-muted);
+  transition: color var(--transition-fast);
+}
+
+.check-icon {
+  font-size: 0.85rem;
+  line-height: 1;
+  font-weight: 700;
+  color: var(--text-disabled);
+  transition: color var(--transition-fast), transform var(--transition-fast);
+}
+
+/* Satisfied Checklist Rule */
+.checklist-item.is-satisfied {
+  color: var(--text-secondary);
+}
+
+.checklist-item.is-satisfied .check-icon {
+  color: var(--color-success-light);
+  transform: scale(1.15);
+}
+
+/* --------------------------------------------------------------------------
+   13. Supportive Microcopy & Primary CTA Button
+   -------------------------------------------------------------------------- */
+.community-pledge {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  background: rgba(167, 139, 250, 0.06);
+  border-left: 3px solid var(--brand-lilac);
+  padding: 0.65rem 0.85rem;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  margin-top: 0.25rem;
+}
+
+.submit-wrapper {
+  margin-top: 0.5rem;
+}
+
+.btn-primary {
+  width: 100%;
+  font-family: var(--font-sans);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  background: linear-gradient(135deg, var(--brand-violet-primary) 0%, var(--brand-violet) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.75rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  transition: all var(--transition-normal);
+  box-shadow: 0 10px 24px -4px rgba(124, 58, 237, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #A78BFA 0%, #8B5CF6 100%);
+  box-shadow: 0 14px 28px -4px rgba(124, 58, 237, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: 0 6px 16px -2px rgba(124, 58, 237, 0.4);
+}
+
+.btn-primary:focus-visible {
+  outline: 3px solid var(--brand-lilac-light);
+  outline-offset: 3px;
+}
+
+/* Button Loading State */
+.btn-primary.is-loading {
+  pointer-events: none;
+  opacity: 0.85;
+}
+
+.btn-primary.is-loading .btn-text {
+  visibility: hidden;
+}
+
+.btn-spinner {
+  display: none;
+  width: 22px;
+  height: 22px;
+  border: 2.5px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #FFFFFF;
+  border-radius: 50%;
+  position: absolute;
+  animation: spin 0.8s linear infinite;
+}
+
+.btn-primary.is-loading .btn-spinner {
+  display: block;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   14. Polished Success State View
+   -------------------------------------------------------------------------- */
+.success-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2.75rem 1.5rem 2.25rem;
+  animation: fadeInPop 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeInPop {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.success-badge-wrapper {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.success-glow {
+  position: absolute;
+  inset: -12px;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.4) 0%, rgba(16, 185, 129, 0) 70%);
+  border-radius: 50%;
+  filter: blur(10px);
+}
+
+.success-icon-badge {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 12px 24px rgba(16, 185, 129, 0.35);
+  position: relative;
+  z-index: 1;
+}
+
+.success-title {
+  font-family: var(--font-display);
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  margin-bottom: 0.6rem;
+}
+
+.success-message {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  max-width: 440px;
+  margin-bottom: 1.75rem;
+}
+
+.success-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  width: 100%;
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.22);
+  border-radius: var(--radius-md);
+  padding: 1.15rem 1.4rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.success-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.925rem;
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+.check-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--color-success);
+  color: #FFFFFF;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+/* Member Detail Card */
+.member-detail-card {
+  width: 100%;
+  background: rgba(15, 4, 45, 0.5);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 1.15rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  text-align: left;
+}
+
+.member-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.875rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding-bottom: 0.5rem;
+}
+
+.member-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.detail-label {
+  color: var(--text-muted);
+}
+
+.detail-val {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.badge-id {
+  font-family: monospace;
+  background: rgba(167, 139, 250, 0.15);
+  color: var(--brand-lilac-light);
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+}
+
+.badge-active {
+  color: var(--color-success-light);
+}
+
+.next-steps-card {
+  width: 100%;
+  background: rgba(167, 139, 250, 0.08);
+  border: 1px solid rgba(167, 139, 250, 0.2);
+  border-radius: var(--radius-md);
+  padding: 1.15rem 1.4rem;
+  margin-bottom: 1.75rem;
+  text-align: left;
+}
+
+.next-steps-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--brand-lilac-light);
+  margin-bottom: 0.35rem;
+}
+
+.next-steps-desc {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.btn-secondary {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.07);
+  border: 1.5px solid var(--border-card);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1.75rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.btn-secondary:hover {
+  background: rgba(167, 139, 250, 0.15);
+  border-color: var(--brand-lilac);
+  transform: translateY(-1px);
+}
+
+.btn-secondary:focus-visible {
+  outline: 2px solid var(--brand-lilac);
+  outline-offset: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   15. Toast Notification for "Sign in"
+   -------------------------------------------------------------------------- */
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 100;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--brand-lilac);
+  border-radius: var(--radius-md);
+  padding: 1rem 1.25rem;
+  box-shadow: var(--shadow-lg), 0 0 20px rgba(167, 139, 250, 0.3);
+  max-width: 360px;
+  transform: translateY(120%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform var(--transition-normal), opacity var(--transition-normal);
+}
+
+.toast.is-visible {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.toast-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+}
+
+.toast-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.toast-text strong {
+  display: block;
+  font-size: 0.925rem;
+  color: var(--text-primary);
+  margin-bottom: 0.2rem;
+}
+
+.toast-text p {
+  font-size: 0.825rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.toast-close {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.35rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 0.25rem;
+  transition: color var(--transition-fast);
+}
+
+.toast-close:hover {
+  color: var(--text-primary);
+}
+
+/* --------------------------------------------------------------------------
+   16. Footer
+   -------------------------------------------------------------------------- */
+.site-footer {
+  width: 100%;
+  border-top: 1px solid var(--border-subtle);
+  background: rgba(15, 4, 45, 0.95);
+  margin-top: auto;
+}
+
+.footer-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 1.75rem 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.footer-meta {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+.footer-tag {
+  color: var(--brand-lilac);
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   17. Responsive Breakpoints
+   -------------------------------------------------------------------------- */
+/* Tablet (<= 1024px) */
+@media (max-width: 1024px) {
+  .layout-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .hero-column {
+    padding-right: 0;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+
+  .form-column {
+    max-width: 620px;
+    margin: 0 auto;
+  }
+
+  .hero-title {
+    font-size: 2.8rem;
+  }
+}
+
+/* Small Tablet (<= 768px) */
+@media (max-width: 768px) {
+  .header-inner {
+    padding: 1rem 1.25rem;
+  }
+
+  .site-nav {
+    display: none; /* Keep header minimal on mobile */
+  }
+
+  .signin-hint {
+    display: none;
+  }
+
+  .main-container {
+    padding: 2rem 1.25rem 3.5rem;
+  }
+
+  .hero-title {
+    font-size: 2.25rem;
+  }
+
+  .form-card {
+    padding: 2rem 1.5rem;
+    border-radius: var(--radius-lg);
+  }
+
+  .toast {
+    left: 1.25rem;
+    right: 1.25rem;
+    max-width: none;
+    bottom: 1.25rem;
+  }
+
+  .footer-inner {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.75rem;
+  }
+}
+
+/* Small Mobile (<= 480px) */
+@media (max-width: 480px) {
+  .hero-title {
+    font-size: 1.95rem;
+  }
+
+  .hero-lead {
+    font-size: 1rem;
+  }
+
+  .programme-card {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .form-card {
+    padding: 1.75rem 1.15rem;
+  }
+
+  .form-title {
+    font-size: 1.6rem;
+  }
+
+  .form-control {
+    font-size: 16px; /* Prevents auto-zoom on iOS */
+    padding: 0.8rem 2.5rem 0.8rem 2.6rem;
+  }
+
+  .member-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .btn-primary {
+    padding: 0.9rem 1.25rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   18. Accessibility & Reduced Motion
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
