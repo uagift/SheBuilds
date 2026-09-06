@@ -45,4 +45,5 @@ Clone the repository and open `index.html` in a modern browser, or use VS Code L
 Built for **Codveda Internship — Level 1, Task 2: Interactive Form**.
 
 **Author:** Amelie-Gift Umurerwa
-**GitHub:** https://github.com/gift-dev575
+**GitHub:** https://github.com/uagift
+
